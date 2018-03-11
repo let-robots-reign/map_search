@@ -13,7 +13,6 @@ def show_map(ll_spn=None, map_type="map", add_params=None):
     if add_params:
         map_request += "&" + add_params
     response = requests.get(map_request)
-
     if not response:
         print("Ошибка выполнения запроса:")
         print(map_request)
