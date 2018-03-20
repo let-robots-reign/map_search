@@ -93,7 +93,7 @@ def get_nearest_object(point, kind):
 
 
 def get_organization(object, kind):
-    point = get_coordinates(object)  # находим координаты по введенеому адресу
+    point = get_coordinates(object)  # находим координаты по введеному адресу
     search_api_server = "https://search-maps.yandex.ru/v1/"  # шаблон
     api_key = "3c4a592e-c4c0-4949-85d1-97291c87825c"  # api-ключ
     ll = "{0},{1}".format(point[0], point[1])
@@ -117,18 +117,25 @@ def get_organization(object, kind):
     # Преобразуем ответ в json-объект
     json_response = response.json()
     # Получаем первую найденную организацию.
-    organization = json_response["features"][0]["properties"]["CompanyMetaData"]
-    # Название организации.
-    org_name = organization["name"]
-    # Адрес организации.
-    org_address = organization["address"]
-    # Часы работы организации.
-    org_hours = organization["Hours"]["text"].replace("–", "-")  # символ "–" приводит к ошибке кодировки
-    # Получаем координаты ответа.
-    point = json_response["features"][0]["geometry"]["coordinates"]
-    org_point = "{0},{1}".format(point[0], point[1])
-    delta = "0.01"
-    return org_name, org_address, org_point, org_hours, delta
+    organizations = json_response["features"]
+    data = []
+    for i in range(10):
+        try:
+            organization = organizations[i]["properties"]["CompanyMetaData"]
+            # Название организации.
+            org_name = organization["name"]
+            # Адрес организации.
+            org_address = organization["address"]
+            # Часы работы организации.
+            org_hours = organization["Hours"]["text"].replace("–", "-")  # символ "–" приводит к ошибке кодировки
+            # Получаем координаты ответа.
+            point = organizations[i]["geometry"]["coordinates"]
+            org_point = "{0},{1}".format(point[0], point[1])
+            data.append((org_name, org_address, org_point, org_hours))
+        except KeyError:
+            print("Извините - было найдено только %d аптек" % i)
+            break
+    return data
 
 
 def lonlat_distance(a, b):
