@@ -4,15 +4,17 @@ import sys
 
 
 def main():
-    toponym_to_find = " ".join(sys.argv[1:])
+    #toponym_to_find = " ".join(sys.argv[1:])
+    toponym_to_find = "Антонова 26Г"
     if toponym_to_find:
         # Поиск по организации
         # Вытаскиваем информацию об организации
-        organizations = get_organization(toponym_to_find, "аптека")
-        point_param = "pt="
+        organizations = get_organization(toponym_to_find)
+        lat, lon = get_coordinates(toponym_to_find)
+        top_point = '{},{}'.format(lat, lon)
+        point_param = "pt={}~".format(top_point)
         for organization in organizations:
             org_name, org_address, org_point, org_hours = organization
-
             if not org_hours:
                 point_param += "{0},pm2grm~".format(org_point)
             if "круглосуточно" in org_hours:
