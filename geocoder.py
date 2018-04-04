@@ -92,7 +92,7 @@ def get_nearest_object(point, kind):
     return features[0]["GeoObject"]["name"] if features else None
 
 
-def get_organization(object):
+def get_organization(object, kind):
     point = get_coordinates(object)  # находим координаты по введеному адресу
     search_api_server = "https://search-maps.yandex.ru/v1/"  # шаблон
     api_key = "3c4a592e-c4c0-4949-85d1-97291c87825c"  # api-ключ
@@ -100,8 +100,8 @@ def get_organization(object):
 
     search_params = {
         "apikey": api_key,
+        "text": kind,
         "lang": "ru_RU",
-        "text": "",
         "ll": ll,
         "type": "biz"
     }
